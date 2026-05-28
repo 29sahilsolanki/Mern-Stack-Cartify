@@ -25,7 +25,7 @@ export const AdminProvider = ({ children }) => {
   const [image, setImage] = useState(null);
 
   const uploadProduct = async (formData) => {
-    const url = "http://localhost:8000/cartify/add-products";
+    const url = "https://cartify-vq4o.onrender.com/cartify/add-products";
     try {
       const res = await axios.post(url, formData);
       console.log(res?.data);
@@ -59,7 +59,7 @@ export const AdminProvider = ({ children }) => {
   const [products, setProducts] = useState([]);
   const fetchProducts = async () => {
     try {
-      const url = "http://localhost:8000/cartify/all-products";
+      const url = "https://cartify-vq4o.onrender.com/cartify/all-products";
       const res = await axios.get(url, { headers: { Authorization: token } });
       setProducts(res?.data?.fetchRes);
     } catch (error) {
@@ -76,7 +76,7 @@ export const AdminProvider = ({ children }) => {
   const [customers, setCustomers] = useState([]);
   const fetchCustomers = async () => {
     try {
-      const url = "http://localhost:8000/cartify/all-customers";
+      const url = "https://cartify-vq4o.onrender.com/cartify/all-customers";
       const res = await axios.get(url, { headers: { Authorization: token } });
       setCustomers(res?.data?.customers.filter((p) => p.role !== "admin"));
     } catch (error) {
@@ -93,7 +93,7 @@ export const AdminProvider = ({ children }) => {
   // customer deatils
   const [customerDetails, setCustomerDetails] = useState(null);
   const fetchCustomerOrders = async (customer, id) => {
-    const url = "http://localhost:8000/cartify/fetch-order";
+    const url = "https://cartify-vq4o.onrender.com/cartify/fetch-order";
     try {
       const res = await axios.get(url, {
         params: { id },
@@ -109,7 +109,7 @@ export const AdminProvider = ({ children }) => {
   //---------------------fetch orders----------------------//
   const [orders, setOrders] = useState([]);
   const fetchAllOrder = async () => {
-    const url = "http://localhost:8000/cartify/all-orders";
+    const url = "https://cartify-vq4o.onrender.com/cartify/all-orders";
     try {
       const res = await axios.get(url, { headers: { Authorization: token } });
       setOrders(res?.data?.orderRes);
@@ -126,7 +126,7 @@ export const AdminProvider = ({ children }) => {
 
   const [date, setDate] = useState("");
   const fetchOrderByDate = async (orderId) => {
-    const url = "http://localhost:8000/cartify/fetch-order-date";
+    const url = "https://cartify-vq4o.onrender.com/cartify/fetch-order-date";
     try {
       const res = await axios.get(url, {
         params: { date, orderId },
@@ -148,7 +148,7 @@ export const AdminProvider = ({ children }) => {
   }, [date]);
 
   const updateOrderStatus = async (orderId, status) => {
-    const url = "http://localhost:8000/cartify/update-status";
+    const url = "https://cartify-vq4o.onrender.com/cartify/update-status";
     try {
       const confirmChange = window.confirm(
         `Do you want to change status of Order ${orderId} to "${status}"?`,
@@ -171,7 +171,7 @@ export const AdminProvider = ({ children }) => {
   //fetch admin details
   const [admin, setAdmin] = useState("");
   const fetchAdminDetails = async () => {
-    const url = "http://localhost:8000/cartify/admin";
+    const url = "https://cartify-vq4o.onrender.com/cartify/admin";
     try {
       const res = await axios.get(url, { headers: { Authorization: token } });
       setAdmin(res?.data?.adminRes);
@@ -193,7 +193,7 @@ export const AdminProvider = ({ children }) => {
     const formData = new FormData();
     formData.append("profile", profilePic);
 
-    const url = "http://localhost:8000/cartify/update-admin-profile";
+    const url = "https://cartify-vq4o.onrender.com/cartify/update-admin-profile";
     try {
       const res = await axios.put(url, formData, {
         headers: { Authorization: token },
@@ -229,7 +229,7 @@ export const AdminProvider = ({ children }) => {
     }
   }, [admin]);
   const updateAdminInfo = async () => {
-    const url = "http://localhost:8000/cartify/update-admin-details";
+    const url = "https://cartify-vq4o.onrender.com/cartify/update-admin-details";
     try {
       const res = await axios.put(url, adminDetails, {
         headers: { Authorization: token },
@@ -261,7 +261,7 @@ export const AdminProvider = ({ children }) => {
   }, [itemId]);
 
   const updateProductDetails = async (formData) => {
-    const url = "http://localhost:8000/cartify/update-product-details";
+    const url = "https://cartify-vq4o.onrender.com/cartify/update-product-details";
     try {
       const res = await axios.put(url, formData, {
         headers: { Authorization: token },
@@ -292,7 +292,7 @@ export const AdminProvider = ({ children }) => {
   }, []);
 
   const fetchTicketDate = async () => {
-    const url = "http://localhost:8000/cartify/support-admin";
+    const url = "https://cartify-vq4o.onrender.com/cartify/support-admin";
     try {
       const res = await axios.get(`${url}/${ticketDate}`, {
         headers: { Authorization: token },
@@ -313,7 +313,7 @@ export const AdminProvider = ({ children }) => {
   }, [ticketDate]);
 
   const adminTicketReply = async (supportId, userId, adminReply) => {
-    const url = "http://localhost:8000/cartify/admin-ticket-reply";
+    const url = "https://cartify-vq4o.onrender.com/cartify/admin-ticket-reply";
     try {
       const res = await axios.put(
         url,
@@ -332,7 +332,7 @@ export const AdminProvider = ({ children }) => {
 
   //--------------------------delete user and details----------------------------//
   const deleteUserAndDetails = async (id) => {
-    const url = `http://localhost:8000/cartify/delete-user/${id}`;
+    const url = `https://cartify-vq4o.onrender.com/cartify/delete-user/${id}`;
     try {
       const res = await axios.delete(url, {
         headers: { Authorization: token },
