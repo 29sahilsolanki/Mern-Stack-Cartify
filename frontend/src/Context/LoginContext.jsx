@@ -15,7 +15,7 @@ export const LoginProvider = ({ children }) => {
 
   const tokenVerify = async () => {
     try {
-      const url = "http://localhost:8000/cartify/token-verify";
+      const url = "https://cartify-vq4o.onrender.com/cartify/token-verify";
       const res = await axios.get(url, { headers: { Authorization: token } });
       console.log(res?.data);
 
@@ -98,7 +98,7 @@ export const LoginProvider = ({ children }) => {
   });
 
   const registerCustomer = async () => {
-    const url = "http://localhost:8000/cartify/register";
+    const url = "https://cartify-vq4o.onrender.com/cartify/register";
     try {
       if (input.password !== input.confirmPass) {
         toast.error("Password and Confirm Password do not match");

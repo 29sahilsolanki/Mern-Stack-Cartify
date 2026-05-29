@@ -10,7 +10,7 @@ export const SupportProvider = ({ children }) => {
   //--------------------support ticket---------------------//
   const [supportTicket, setSupportTicket] = useState(null);
   const fetchSupportTicket = async () => {
-    const url = "http://localhost:8000/cartify/support-ticket";
+    const url = "https://cartify-vq4o.onrender.com/cartify/support-ticket";
     try {
       const res = await axios.get(url, { headers: { Authorization: token } });
       setSupportTicket(res?.data?.supportRes);
@@ -26,7 +26,7 @@ export const SupportProvider = ({ children }) => {
   }, [token, role]);
 
   const raiseSupportTicket = async (supportInput) => {
-    const url = "http://localhost:8000/cartify/raise-ticket";
+    const url = "https://cartify-vq4o.onrender.com/cartify/raise-ticket";
     try {
       const res = await axios.post(url, supportInput, {
         headers: { Authorization: token },
@@ -40,7 +40,7 @@ export const SupportProvider = ({ children }) => {
   };
 
   const updateSupportTicketCus = async (supportInput) => {
-    const url = "http://localhost:8000/cartify/update-support-ticket";
+    const url = "https://cartify-vq4o.onrender.com/cartify/update-support-ticket";
     try {
       const res = await axios.put(url, supportInput, {
         headers: { Authorization: token },
