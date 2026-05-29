@@ -46,7 +46,7 @@ export const LoginProvider = ({ children }) => {
 
   const userLogin = async (credentials) => {
     try {
-      const url = "http://localhost:8000/cartify/login";
+      const url = "https://cartify-vq4o.onrender.com/cartify/login";
       const loginData = credentials || loginInput;
       const res = await axios.post(url, loginData);
       console.log(res?.data);
