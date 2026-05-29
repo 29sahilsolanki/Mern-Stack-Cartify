@@ -9,6 +9,10 @@ export default function Login() {
     userLogin();
   }
 
+  function handleDemoLogin() {
+    userLogin({ email: "sahil@gmail.com", password: "12345" });
+  }
+
   return (
     <div className="flex justify-center mt-22">
       <div className="bg-gradient-to-r from-black via-gray-900 to-black bg-opacity-90 w-xl p-8 rounded-xl shadow-2xl">
@@ -53,6 +57,15 @@ export default function Login() {
             className="w-full bg-indigo-600 hover:bg-indigo-700 px-6 py-2 rounded-md text-white font-semibold transition-transform duration-200 hover:scale-105"
           >
             Login
+          </button>
+
+          {/* Demo Login Button */}
+          <button
+            type="button"
+            onClick={handleDemoLogin}
+            className="w-full bg-gray-200 text-gray-800 font-semibold py-2 rounded-md shadow-md hover:bg-gray-300 transition-transform transform hover:scale-105 mt-3"
+          >
+            Demo Login
           </button>
         </form>
 

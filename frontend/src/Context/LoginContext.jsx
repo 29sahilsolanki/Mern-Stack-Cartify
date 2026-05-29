@@ -44,10 +44,11 @@ export const LoginProvider = ({ children }) => {
     }
   }, [token]);
 
-  const userLogin = async () => {
+  const userLogin = async (credentials) => {
     try {
       const url = "http://localhost:8000/cartify/login";
-      const res = await axios.post(url, loginInput);
+      const loginData = credentials || loginInput;
+      const res = await axios.post(url, loginData);
       console.log(res?.data);
       setLoginInput({ email: "", password: "" });
       toast.success(res?.data?.message);
