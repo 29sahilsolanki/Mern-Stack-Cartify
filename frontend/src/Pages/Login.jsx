@@ -9,8 +9,12 @@ export default function Login() {
     userLogin();
   }
 
-  function handleDemoLogin() {
+  function handleUserLogin() {
     userLogin({ email: "sahil@gmail.com", password: "12345" });
+  }
+
+  function handleAdminLogin() {
+    userLogin({ email: "admin@gmail.com", password: "admin" });
   }
 
   return (
@@ -60,13 +64,22 @@ export default function Login() {
           </button>
 
           {/* Demo Login Button */}
-          <button
-            type="button"
-            onClick={handleDemoLogin}
-            className="w-full bg-gray-200 text-gray-800 font-semibold py-2 rounded-md shadow-md hover:bg-gray-300 transition-transform transform hover:scale-105 mt-3"
-          >
-            Demo Login
-          </button>
+          <div className="flex justify-between gap-4 w-full mt-3">
+            <button
+              type="button"
+              onClick={handleUserLogin}
+              className="cursor-pointer w-1/2 bg-gray-200 text-gray-800 font-semibold py-2 rounded-md shadow-md hover:bg-gray-300 transition-transform transform hover:scale-105"
+            >
+              User Login
+            </button>
+            <button
+              type="button"
+              onClick={handleAdminLogin}
+              className="cursor-pointer w-1/2 bg-gray-200 text-gray-800 font-semibold py-2 rounded-md shadow-md hover:bg-gray-300 transition-transform transform hover:scale-105 "
+            >
+              Admin Login
+            </button>
+          </div>
         </form>
 
         {/* Extra Links */}
