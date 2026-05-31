@@ -76,14 +76,14 @@ export default function Login() {
               onClick={handleUserLogin}
               className="cursor-pointer w-1/2 bg-gray-200 text-gray-800 font-semibold py-2 rounded-md shadow-md hover:bg-gray-300 transition-transform transform hover:scale-105"
             >
-              User Login
+              Login as user
             </button>
             <button
               type="button"
               onClick={handleAdminLogin}
               className="cursor-pointer w-1/2 bg-gray-200 text-gray-800 font-semibold py-2 rounded-md shadow-md hover:bg-gray-300 transition-transform transform hover:scale-105 "
             >
-              Admin Login
+              Login as admin
             </button>
           </div>
         </form>
