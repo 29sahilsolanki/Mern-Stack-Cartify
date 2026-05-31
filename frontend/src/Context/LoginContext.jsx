@@ -44,8 +44,11 @@ export const LoginProvider = ({ children }) => {
     }
   }, [token]);
 
+  const [loading, setLoading] = useState(false);
+
   const userLogin = async (credentials) => {
     try {
+      setLoading(true);
       const url = "https://cartify-vq4o.onrender.com/cartify/login";
       const loginData = credentials || loginInput;
       const res = await axios.post(url, loginData);
@@ -64,6 +67,8 @@ export const LoginProvider = ({ children }) => {
     } catch (error) {
       toast.error(error?.response?.data?.message);
       console.log(error?.response?.data);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -139,6 +144,7 @@ export const LoginProvider = ({ children }) => {
         loginInput,
         image,
         input,
+        loading,
         setInput,
         setImage,
         setLoginInput,

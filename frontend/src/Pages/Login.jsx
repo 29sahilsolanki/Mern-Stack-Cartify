@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { useLogin } from "../Context/LoginContext";
 
 export default function Login() {
-  const { userLogin, loginInput, setLoginInput } = useLogin();
+  const { userLogin, loginInput, setLoginInput, loading } = useLogin();
 
   function handleLogin(e) {
     e.preventDefault();
@@ -19,6 +19,12 @@ export default function Login() {
 
   return (
     <div className="flex justify-center mt-22">
+      {loading && (
+        <div className="fixed inset-0 bg-slate-700 bg-opacity-30 flex items-center justify-center z-50">
+          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-indigo-600 border-b-4 border-white"></div>
+        </div>
+      )}
+
       <div className="bg-gradient-to-r from-black via-gray-900 to-black bg-opacity-90 w-xl p-8 rounded-xl shadow-2xl">
         {/* Heading */}
         <h1 className="text-3xl font-bold text-center text-indigo-400 mb-6">
