@@ -38,7 +38,6 @@ export default function Customers() {
                 fetchCustomerOrders(p, p._id);
               }}
               key={p._id}
-              /* 🛠️ FIX: डार्क कलर्स हटाकर लक्ज़री पेपर-वाइट कार्ड्स आर्किटेक्चर दिया जो होवर पर इंडिगो ग्लो करेगा */
               className="bg-white border border-gray-200/80 rounded-2xl p-6 shadow-sm hover:shadow-xl hover:border-indigo-200 transition-all duration-300 flex flex-col justify-between"
             >
               {/* Avatar with Ring Accents */}
@@ -56,7 +55,7 @@ export default function Customers() {
                   <span className="text-xs font-bold uppercase tracking-wider text-gray-400 flex items-center gap-1">
                     <FiUser size={13} /> Name
                   </span>
-                  <span className="text-sm font-bold text-gray-900 capitalize truncate max-w-[140px]">
+                  <span className="text-sm font-bold text-gray-900 capitalize truncate max-w-35">
                     {p.name}
                   </span>
                 </div>
@@ -65,7 +64,7 @@ export default function Customers() {
                   <span className="text-xs font-bold uppercase tracking-wider text-gray-400 flex items-center gap-1">
                     <FiMail size={13} /> Email
                   </span>
-                  <span className="text-sm font-medium text-gray-600 truncate max-w-[160px] font-mono text-xs">
+                  <span className="text-sm font-medium text-gray-600 truncate max-w-40 font-mono">
                     {p.email}
                   </span>
                 </div>

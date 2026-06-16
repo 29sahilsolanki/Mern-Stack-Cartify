@@ -357,7 +357,7 @@ export const AdminProvider = ({ children }) => {
         headers: { Authorization: token },
       });
       toast.success(res?.data?.message);
-      fetchAllOrder();
+      fetchProducts();
     } catch (error) {
       toast.error(error?.response?.data?.message);
       console.log(error?.response?.data);
