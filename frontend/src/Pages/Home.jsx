@@ -77,17 +77,18 @@ export default function Home() {
             to={targetShopUrl}
             className="inline-flex items-center gap-2 font-bold text-sm text-indigo-600 hover:text-indigo-700 group"
           >
-            See All Containers{" "}
+            View All Products{" "}
             <FaArrowRight className="text-xs group-hover:translate-x-1 transition-transform" />
           </Link>
         </div>
 
         {/* Bento Grid Construction */}
+
         <div className="grid grid-cols-1 md:grid-cols-6 gap-6 h-auto md:h-162">
           {/* Electronics Card (Large Wide) */}
           <div
             onClick={() => navigate(targetShopUrl)}
-            className="md:col-span-4 group relative rounded-3xl overflow-hidden cursor-pointer border border-neutral-200/50 shadow-sm bg-zinc-900"
+            className="md:col-span-4 min-h-62 md:min-h-0 group relative rounded-3xl overflow-hidden cursor-pointer border border-neutral-200/50 shadow-sm bg-zinc-900"
           >
             <img
               src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=1200&auto=format&fit=crop"
@@ -109,7 +110,7 @@ export default function Home() {
           {/* Jewellery Card (Vertical Tall) */}
           <div
             onClick={() => navigate(targetShopUrl)}
-            className="md:col-span-2 group relative rounded-3xl overflow-hidden cursor-pointer border border-neutral-200/50 shadow-sm bg-zinc-900"
+            className="md:col-span-2 min-h-62 md:min-h-0 group relative rounded-3xl overflow-hidden cursor-pointer border border-neutral-200/50 shadow-sm bg-zinc-900"
           >
             <img
               src="https://images.unsplash.com/photo-1617038220319-276d3cfab638?q=80&w=1200&auto=format&fit=crop"
@@ -131,7 +132,7 @@ export default function Home() {
           {/* Furniture Card (Vertical Tall) */}
           <div
             onClick={() => navigate(targetShopUrl)}
-            className="md:col-span-2 group relative rounded-3xl overflow-hidden cursor-pointer border border-neutral-200/50 shadow-sm bg-zinc-900"
+            className="md:col-span-2 min-h-62 md:min-h-0 group relative rounded-3xl overflow-hidden cursor-pointer border border-neutral-200/50 shadow-sm bg-zinc-900"
           >
             <img
               src="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?q=80&w=1200&auto=format&fit=crop"
@@ -153,7 +154,7 @@ export default function Home() {
           {/* Fashion Card (Large Wide) */}
           <div
             onClick={() => navigate(targetShopUrl)}
-            className="md:col-span-4 group relative rounded-3xl overflow-hidden cursor-pointer border border-neutral-200/50 shadow-sm bg-zinc-900"
+            className="md:col-span-4 min-h-62 md:min-h-0 group relative rounded-3xl overflow-hidden cursor-pointer border border-neutral-200/50 shadow-sm bg-zinc-900"
           >
             <img
               src="https://images.unsplash.com/photo-1523381210434-271e8be1f52b?q=80&w=1200&auto=format&fit=crop"
@@ -264,16 +265,15 @@ export default function Home() {
             <p className="text-base sm:text-lg text-neutral-400 font-light leading-relaxed">
               Acquire unmatched seasonal catalog nodes with tier reductions
               touching up to{" "}
-              <span className="text-white font-semibold underline decoration-indigo-500 decoration-2 underline-offset-4">
+              <span className="block text-white text-xl font-semibold underline decoration-indigo-500 decoration-2 underline-offset-4">
                 50% OFF
               </span>
-              .
             </p>
 
             <div className="pt-4">
               <button
                 onClick={() => navigate(targetShopUrl)}
-                className="bg-white text-zinc-950 hover:bg-neutral-100 px-8 py-4 rounded-2xl font-bold transition-all shadow-lg active:scale-95 flex items-center gap-2 text-sm uppercase tracking-wider"
+                className="cursor-pointer bg-white text-zinc-950 hover:bg-neutral-100 px-8 py-4 rounded-2xl font-bold transition-all shadow-lg active:scale-95 flex items-center gap-2 text-sm uppercase tracking-wider"
               >
                 Access Deals <FaArrowRight className="text-xs" />
               </button>
