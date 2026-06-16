@@ -353,7 +353,9 @@ export const AdminProvider = ({ children }) => {
   const deleteProduct = async (productId) => {
     const url = `https://cartify-vq4o.onrender.com/cartify/delete-product/${productId}`;
     try {
-      const res = await axios.delete(url);
+      const res = await axios.delete(url, {
+        headers: { Authorization: token },
+      });
       toast.success(res?.data?.message);
       fetchAllOrder();
     } catch (error) {
