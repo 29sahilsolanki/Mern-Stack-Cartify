@@ -20,7 +20,7 @@ export default function CheckoutAddress() {
             {customer.items.map((p) => (
               <li
                 key={p._id}
-                className="flex items-center gap-3 bg-gray-700 p-3 rounded-md hover:bg-gray-600 transition cursor-pointer"
+                className="flex items-center gap-3 bg-slate-100 p-3 rounded-md hover:bg-white transition cursor-pointer"
               >
                 <label className="flex items-center gap-3 w-full cursor-pointer">
                   <input

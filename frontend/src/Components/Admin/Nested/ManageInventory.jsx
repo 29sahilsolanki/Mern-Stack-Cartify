@@ -1,12 +1,19 @@
 import { useEffect, useState } from "react";
 import { useAdmin } from "../../../Context/AdminContext";
 import { FaRegEdit } from "react-icons/fa";
-import { FiSearch } from "react-icons/fi";
+import {
+  FiSearch,
+  FiLayers,
+  FiCheckCircle,
+  FiXCircle,
+  FiPlus,
+  FiTrash2,
+} from "react-icons/fi";
 import { Link } from "react-router-dom";
 import Fuse from "fuse.js";
 
 export default function ManageInventory() {
-  const { products, fetchProducts, setItemId } = useAdmin();
+  const { products, fetchProducts, setItemId, deleteProduct } = useAdmin();
 
   useEffect(() => {
     fetchProducts();
@@ -16,7 +23,6 @@ export default function ManageInventory() {
   const inStock = products.filter((p) => p.stock > 0).length;
   const outOfStock = products.filter((p) => p.stock === 0).length;
 
-  // Sorting
   const [sortValue, setSortValue] = useState("");
   const [sorted, setSorted] = useState([]);
 
@@ -34,7 +40,6 @@ export default function ManageInventory() {
     }
   }, [sortValue, products]);
 
-  // Search
   const options = { keys: ["title", "description"], threshold: 0.4 };
   const fuse = new Fuse(products, options);
   const [search, setSearch] = useState("");
@@ -49,136 +54,215 @@ export default function ManageInventory() {
     setSorted(results.map((p) => p.item));
   };
 
-  return (
-    <div>
-      {/* Inventory Overview */}
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold mb-4 mt-4 text-white">
-          Inventory Overview
-        </h1>
+  /* 🛠️ Optional Operational Mock Handler - Wire this up to your context/API action if available */
+  const handleDeleteProduct = (id, title) => {
+    const confirmDelete = window.confirm(
+      `Are you sure you want to permanently delete "${title}"?`,
+    );
+    if (confirmDelete) {
+      deleteProduct(id);
+    }
+  };
 
-        <div className="flex flex-col md:flex-row gap-4 mb-6">
-          <div className="bg-gradient-to-b from-slate-800 via-gray-900 to-gray-800 rounded-md shadow p-4 flex flex-col items-center flex-1">
-            <h2 className="text-lg font-bold text-gray-300">Total Products</h2>
-            <p className="text-2xl font-semibold text-indigo-400">
+  return (
+    <div className="text-gray-900 min-h-screen p-4 pt-24 pb-12 sm:p-8 font-sans antialiased">
+      <div className="max-w-6xl mx-auto space-y-8">
+        {/* Top Header Panel */}
+        <div className="w-full bg-slate-50 border border-gray-200/60 px-6 py-5 rounded-2xl shadow-sm flex items-center gap-3">
+          <div className="p-3 bg-indigo-50 text-indigo-600 rounded-xl text-xl">
+            <FiLayers />
+          </div>
+          <div>
+            <h1 className="text-xl font-extrabold tracking-tight text-gray-900">
+              Inventory Operations
+            </h1>
+            <p className="text-xs text-gray-400 mt-0.5">
+              Audit stock levels, update acquisition listings, and monitor
+              parameters
+            </p>
+          </div>
+        </div>
+
+        {/* Inventory Overview Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+          <div className="bg-white border border-gray-200/80 rounded-2xl p-5 flex flex-col items-center text-center shadow-xs">
+            <div className="p-2.5 bg-indigo-50 text-indigo-600 rounded-xl text-lg mb-2">
+              <FiLayers />
+            </div>
+            <h2 className="text-xs font-bold uppercase tracking-wider text-gray-400">
+              Total Products
+            </h2>
+            <p className="text-2xl font-black text-gray-900 tracking-tight mt-1">
               {totalProducts}
             </p>
           </div>
-          <div className="bg-gradient-to-b from-slate-800 via-gray-900 to-gray-800 rounded-md shadow p-4 flex flex-col items-center flex-1">
-            <h2 className="text-lg font-bold text-gray-300">In Stock</h2>
-            <p className="text-2xl font-semibold text-green-400">{inStock}</p>
+
+          <div className="bg-white border border-gray-200/80 rounded-2xl p-5 flex flex-col items-center text-center shadow-xs">
+            <div className="p-2.5 bg-emerald-50 text-emerald-600 rounded-xl text-lg mb-2">
+              <FiCheckCircle />
+            </div>
+            <h2 className="text-xs font-bold uppercase tracking-wider text-gray-400">
+              In Stock
+            </h2>
+            <p className="text-2xl font-black text-emerald-600 tracking-tight mt-1">
+              {inStock}
+            </p>
           </div>
-          <div className="bg-gradient-to-b from-slate-800 via-gray-900 to-gray-800 rounded-md shadow p-4 flex flex-col items-center flex-1">
-            <h2 className="text-lg font-bold text-gray-300">Out of Stock</h2>
-            <p className="text-2xl font-semibold text-red-400">{outOfStock}</p>
+
+          <div className="bg-white border border-gray-200/80 rounded-2xl p-5 flex flex-col items-center text-center shadow-xs">
+            <div className="p-2.5 bg-red-50 text-red-600 rounded-xl text-lg mb-2">
+              <FiXCircle />
+            </div>
+            <h2 className="text-xs font-bold uppercase tracking-wider text-gray-400">
+              Out of Stock
+            </h2>
+            <p className="text-2xl font-black text-red-600 tracking-tight mt-1">
+              {outOfStock}
+            </p>
           </div>
         </div>
-      </div>
 
-      {/* Manage Inventory */}
-      <h1 className="text-2xl font-bold mb-2 mt-10 text-white">
-        Manage Inventory
-      </h1>
-      {/* Toolbar */}
-      <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center bg-gradient-to-r from-slate-800 via-gray-900 to-black p-4 rounded-md shadow mb-6 gap-4">
-        {/* Left Controls */}
-        <div className="flex flex-row gap-4 flex-wrap w-full sm:w-auto">
-          <select
-            value={sortValue}
-            onChange={(e) => setSortValue(e.target.value)}
-            className="px-4 py-2 rounded-md bg-gray-900 font-bold text-white border-2 border-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm flex-1"
-          >
-            <option value="">Sort: Default</option>
-            <option value="available">Sort: In Stock</option>
-            <option value="notAvailable">Sort: Out of Stock</option>
-            <option value="priceLowHigh">Sort: Low → High</option>
-            <option value="priceHighLow">Sort: High → Low</option>
-          </select>
-
-          <Link
-            to="/admin-dashboard/upload-products"
-            className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-2 py-2 sm:px-4 rounded-md shadow hover:from-indigo-700 hover:to-purple-700 text-sm flex-1 text-center"
-          >
-            + Add Product
-          </Link>
-        </div>
-
-        {/* Search Bar */}
-        <form
-          onSubmit={handleSearch}
-          className="flex items-center bg-slate-700 border-2 border-indigo-600 rounded-md px-3 py-2 w-full sm:w-1/2"
-        >
-          <input
-            type="text"
-            placeholder="Search products..."
-            value={search}
-            className="flex-grow outline-none text-sm bg-transparent text-white placeholder-gray-400"
-            onChange={(e) => setSearch(e.target.value)}
-          />
-          <FiSearch
-            className="text-xl text-indigo-400 cursor-pointer ml-2"
-            onClick={handleSearch}
-          />
-        </form>
-      </div>
-
-      {/* Product Cards */}
-      <div className="flex flex-col gap-4">
-        {sorted && sorted.length > 0 ? (
-          sorted.map((items) => (
-            <div
-              key={items._id}
-              className="flex flex-col sm:flex-row items-center p-4 gap-4 w-full rounded-md shadow-md bg-gradient-to-b from-slate-800 via-gray-900 to-gray-800 text-white"
+        {/* Control Toolbar */}
+        <div className="flex flex-col md:flex-row justify-between items-stretch md:items-center bg-slate-50 border border-gray-200/60 p-4 rounded-2xl shadow-sm gap-4">
+          <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+            <select
+              value={sortValue}
+              onChange={(e) => setSortValue(e.target.value)}
+              className="px-4 py-2.5 rounded-xl bg-white border border-gray-200 text-gray-700 text-xs font-bold uppercase tracking-wider outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all cursor-pointer min-w-45"
             >
-              <img
-                src={items.image}
-                alt={items.title}
-                className="h-32 w-32 object-cover rounded-md border border-slate-600 p-2"
-              />
-              <div className="flex flex-col flex-grow w-full">
-                <h2 className="font-bold text-base sm:text-lg">
-                  {items.title}
-                </h2>
-                <p className="text-sm text-gray-300">{items.description}</p>
-                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mt-3 sm:mt-auto gap-2">
-                  <span className="flex gap-4 text-sm text-gray-400">
-                    <p>
-                      Price:{" "}
-                      <label className="text-indigo-400">₹{items.price}</label>
-                    </p>
-                    <p>
-                      Stock:{" "}
-                      <label
-                        className={
-                          items.stock > 0 ? "text-green-400" : "text-red-400"
-                        }
+              <option value="">Sort: All Products</option>
+              <option value="available">Sort: In Stock</option>
+              <option value="notAvailable">Sort: Out of Stock</option>
+              <option value="priceLowHigh">Sort: Low → High</option>
+              <option value="priceHighLow">Sort: High → Low</option>
+            </select>
+
+            <Link
+              to="/admin-dashboard/upload-products"
+              className="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold uppercase tracking-wider px-5 py-3 rounded-xl shadow-md shadow-indigo-600/10 transition-all active:scale-98 text-center flex items-center justify-center gap-1.5"
+            >
+              <FiPlus size={14} /> Add Product
+            </Link>
+          </div>
+
+          {/* Search Action Bar */}
+          <form
+            onSubmit={handleSearch}
+            className="flex items-center bg-white border border-gray-200 rounded-xl px-4 py-2.5 flex-1 md:max-w-md focus-within:ring-2 focus-within:ring-indigo-500/20 focus-within:border-indigo-500 transition-all"
+          >
+            <input
+              type="text"
+              placeholder="Search specifications or titles..."
+              value={search}
+              className="grow outline-none text-sm bg-transparent text-gray-800 placeholder-gray-400 font-medium"
+              onChange={(e) => setSearch(e.target.value)}
+            />
+            <button
+              type="submit"
+              className="text-gray-400 hover:text-indigo-600 transition cursor-pointer ml-2"
+            >
+              <FiSearch size={18} />
+            </button>
+          </form>
+        </div>
+
+        {/* Product Cards Feed Array */}
+        <div className="flex flex-col gap-4">
+          {sorted && sorted.length > 0 ? (
+            sorted.map((items) => (
+              <div
+                key={items._id}
+                className="flex flex-col sm:flex-row items-center p-4 sm:p-5 gap-5 w-full rounded-2xl border border-gray-200/80 bg-white shadow-sm hover:shadow-md transition-all duration-200"
+              >
+                {/* Product Thumbnail Box */}
+                <div className="w-32 h-32 bg-slate-50 border border-slate-100 rounded-xl p-3 flex items-center justify-center shrink-0">
+                  <img
+                    src={items.image}
+                    alt={items.title}
+                    className="max-h-full max-w-full object-contain mix-blend-multiply"
+                  />
+                </div>
+
+                {/* Meta Description Node */}
+                <div className="flex flex-col grow w-full min-w-0 py-1">
+                  <div className="flex justify-between items-start gap-4">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-indigo-600 block mb-0.5">
+                      {items.category || "Premium Catalog"}
+                    </span>
+                  </div>
+                  <h2 className="font-bold text-base text-gray-900 tracking-tight truncate">
+                    {items.title}
+                  </h2>
+                  <p className="text-xs text-gray-400 line-clamp-2 mt-1 font-light leading-relaxed">
+                    {items.description}
+                  </p>
+
+                  {/* Footer Metrics Data Row */}
+                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mt-4 pt-3 border-t border-slate-100 gap-3">
+                    <div className="flex gap-5 text-xs font-semibold text-gray-500">
+                      <p>
+                        Price:{" "}
+                        <span className="text-gray-900 font-extrabold ml-1">
+                          ₹{items.price?.toLocaleString("en-IN")}
+                        </span>
+                      </p>
+                      <div className="flex items-center gap-1.5">
+                        <span>Stock Parameters:</span>
+                        <span
+                          className={`px-2 py-0.5 text-[11px] font-bold rounded-md border ${
+                            items.stock > 0
+                              ? "bg-emerald-50 text-emerald-700 border-emerald-100"
+                              : "bg-red-50 text-red-700 border-red-100"
+                          }`}
+                        >
+                          {items.stock > 0
+                            ? `${items.stock} Available`
+                            : "Out of Stock"}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* 🛠️ Action Links/Triggers Wrapper Grid */}
+                    <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
+                      {/* Modify Button Trigger */}
+                      <Link
+                        to="/admin-dashboard/edit-product"
+                        onClick={() => setItemId(items._id)}
+                        className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider border border-gray-200 hover:border-indigo-600 text-gray-600 hover:text-indigo-600 px-3.5 py-2 bg-white hover:bg-indigo-50/20 rounded-xl transition-all active:scale-95 cursor-pointer"
                       >
-                        {items.stock}
-                      </label>
-                    </p>
-                  </span>
-                  <Link
-                    to="/admin-dashboard/edit-product"
-                    onClick={() => setItemId(items._id)}
-                    className="flex text-blue-500 items-center gap-1 cursor-pointer hover:text-indigo-500"
-                  >
-                    <span>Edit</span>
-                    <FaRegEdit />
-                  </Link>
+                        <span>Edit Product</span>
+                        <FaRegEdit size={13} />
+                      </Link>
+
+                      {/* 🛠️ NEW: Added Premium Red Delete Button Trigger */}
+                      <button
+                        type="button"
+                        onClick={() =>
+                          handleDeleteProduct(items._id, items.title)
+                        }
+                        className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider bg-red-50 hover:bg-red-100 border border-red-100 hover:border-red-200 text-red-600 px-3.5 py-2 rounded-xl transition-all active:scale-95 cursor-pointer"
+                        title="Delete product listing"
+                      >
+                        <span>Delete</span>
+                        <FiTrash2 size={13} />
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
+            ))
+          ) : (
+            /* Fallback Container Empty Grid */
+            <div className="text-center py-16 bg-slate-50 border border-dashed border-gray-200 rounded-2xl shadow-sm">
+              <p className="text-sm font-bold text-red-600 uppercase tracking-wider">
+                No products found..!!
+              </p>
+              <p className="text-xs text-gray-400 mt-1">
+                Try changing your structural filter options if any...
+              </p>
             </div>
-          ))
-        ) : (
-          <div className="text-center text-gray-400 py-10 bg-slate-800 rounded-md">
-            <p className="text-lg font-semibold text-red-400">
-              No products found in this category
-            </p>
-            <p className="text-sm">
-              Try changing your sort option or add new products.
-            </p>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );

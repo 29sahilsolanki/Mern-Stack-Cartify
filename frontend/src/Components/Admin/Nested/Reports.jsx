@@ -1,4 +1,12 @@
 import { useAdmin } from "../../../Context/AdminContext";
+import {
+  FiBarChart2,
+  FiTrendingUp,
+  FiUsers,
+  FiBox,
+  FiClock,
+  FiCalendar,
+} from "react-icons/fi";
 
 export default function Reports() {
   const { orders, customers } = useAdmin();
@@ -13,91 +21,162 @@ export default function Reports() {
   const Delivered = orders.filter((p) => p.status === "Delivered").length;
   const Cancelled = orders.filter((p) => p.status === "Cancelled").length;
 
+  const getStatusCardStyle = (status) => {
+    switch (status) {
+      case "Delivered":
+        return "text-emerald-600 bg-emerald-50/50 border-emerald-100";
+      case "Pending":
+        return "text-amber-600 bg-amber-50/50 border-amber-100";
+      case "Cancelled":
+        return "text-red-600 bg-red-50/50 border-red-100";
+      case "Processing":
+        return "text-blue-600 bg-blue-50/50 border-blue-100";
+      default:
+        return "text-purple-600 bg-purple-50/50 border-purple-100";
+    }
+  };
+
   return (
-    <div className="flex-1 pt-2 mt-2 p-4 sm:p-6 min-h-screen bg-gradient-to-b from-slate-800 via-gray-900 to-gray-800 rounded-xl">
-      <h1 className="text-xl sm:text-2xl font-bold text-white mb-6 mt-2 text-center">
-        Order Reports
-      </h1>
+    <div className=" text-gray-900 min-h-screen p-4 pt-24 pb-12 sm:p-8 font-sans antialiased">
+      <div className="max-w-6xl mx-auto space-y-8">
+        {/* Top Header Panel */}
+        <div className="w-full bg-slate-50 border border-gray-200/60 px-6 py-5 rounded-2xl shadow-sm flex items-center gap-3">
+          <div className="p-3 bg-indigo-50 text-indigo-600 rounded-xl text-xl">
+            <FiBarChart2 />
+          </div>
+          <div>
+            <h1 className="text-xl font-extrabold tracking-tight text-gray-900">
+              Order Reports
+            </h1>
+            <p className="text-xs text-gray-400 mt-0.5">
+              Comprehensive audit breakdown of platform commerce metrics
+            </p>
+          </div>
+        </div>
 
-      {/* Summary Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 mb-10">
-        <div className="bg-gradient-to-r from-indigo-600 to-purple-700 p-4 sm:p-6 rounded-xl shadow-lg text-white">
-          <h2 className="text-sm sm:text-lg font-semibold">Total Orders</h2>
-          <p className="text-2xl sm:text-3xl font-bold">{totalOrders}</p>
-        </div>
-        <div className="bg-gradient-to-r from-green-600 to-emerald-700 p-4 sm:p-6 rounded-xl shadow-lg text-white">
-          <h2 className="text-sm sm:text-lg font-semibold">Total Revenue</h2>
-          <p className="text-2xl sm:text-3xl font-bold">₹ {totalRevenue}</p>
-        </div>
-        <div className="bg-gradient-to-r from-pink-600 to-red-700 p-4 sm:p-6 rounded-xl shadow-lg text-white">
-          <h2 className="text-sm sm:text-lg font-semibold">Total Customers</h2>
-          <p className="text-2xl sm:text-3xl font-bold">{totalCustomers}</p>
-        </div>
-      </div>
-
-      {/* Status Breakdown */}
-      <div className="bg-slate-800 rounded-xl p-4 sm:p-6 shadow-lg mb-10">
-        <h2 className="text-lg sm:text-xl font-bold text-white mb-4">
-          Order Status Breakdown
-        </h2>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 text-center">
-          <div className="bg-slate-700 p-3 sm:p-4 rounded-lg shadow-md hover:border-indigo-500 border border-slate-600 transition-all">
-            <p className="text-gray-400 text-xs sm:text-sm">Pending</p>
-            <p className="text-lg sm:text-xl font-bold text-indigo-400">
-              {Pending}
-            </p>
-          </div>
-          <div className="bg-slate-700 p-3 sm:p-4 rounded-lg shadow-md hover:border-indigo-500 border border-slate-600 transition-all">
-            <p className="text-gray-400 text-xs sm:text-sm">Processing</p>
-            <p className="text-lg sm:text-xl font-bold text-indigo-400">
-              {Processing}
-            </p>
-          </div>
-          <div className="bg-slate-700 p-3 sm:p-4 rounded-lg shadow-md hover:border-indigo-500 border border-slate-600 transition-all">
-            <p className="text-gray-400 text-xs sm:text-sm">Shipped</p>
-            <p className="text-lg sm:text-xl font-bold text-indigo-400">
-              {Shipped}
-            </p>
-          </div>
-          <div className="bg-slate-700 p-3 sm:p-4 rounded-lg shadow-md hover:border-indigo-500 border border-slate-600 transition-all">
-            <p className="text-gray-400 text-xs sm:text-sm">Delivered</p>
-            <p className="text-lg sm:text-xl font-bold text-indigo-400">
-              {Delivered}
-            </p>
-          </div>
-          <div className="bg-slate-700 p-3 sm:p-4 rounded-lg shadow-md hover:border-indigo-500 border border-slate-600 transition-all">
-            <p className="text-gray-400 text-xs sm:text-sm">Cancelled</p>
-            <p className="text-lg sm:text-xl font-bold text-indigo-400">
-              {Cancelled}
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* Recent Orders */}
-      <div className="bg-slate-800 rounded-xl p-4 sm:p-6 shadow-lg">
-        <h2 className="text-lg sm:text-xl font-bold text-white mb-4">
-          Recent Orders
-        </h2>
-        <div className="space-y-4">
-          {orders.slice(0, 5).map((order) => (
-            <div
-              key={order._id}
-              className="flex flex-col sm:flex-row justify-between sm:items-center bg-slate-700 p-4 rounded-lg shadow-md hover:border-indigo-500 border border-slate-600 transition-all gap-2"
-            >
-              <p className="text-gray-300 font-semibold text-sm sm:text-base">
-                Order Id: {order._id}
-              </p>
-              <div className="text-left sm:text-right text-xs sm:text-sm">
-                <p className="text-indigo-400">
-                  Date: {new Date(order.createdAt).toLocaleDateString("en-GB")}
-                </p>
-                <p className="text-yellow-400">
-                  Revenue: ₹ {order.total.toLocaleString("en-IN")}
-                </p>
-              </div>
+        {/* Summary Metric Cards Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
+          <div className="bg-white border border-gray-200/80 p-6 rounded-2xl shadow-sm flex flex-col items-center text-center">
+            <div className="p-3 bg-indigo-50 text-indigo-600 rounded-xl text-lg mb-3">
+              <FiBox />
             </div>
-          ))}
+            <h2 className="text-xs font-bold uppercase tracking-wider text-gray-400">
+              Total Orders
+            </h2>
+            <p className="text-2xl font-black text-gray-900 tracking-tight mt-1">
+              {totalOrders}
+            </p>
+          </div>
+
+          <div className="bg-white border border-gray-200/80 p-6 rounded-2xl shadow-sm flex flex-col items-center text-center">
+            <div className="p-3 bg-emerald-50 text-emerald-600 rounded-xl text-lg mb-3">
+              <FiTrendingUp />
+            </div>
+            <h2 className="text-xs font-bold uppercase tracking-wider text-gray-400">
+              Total Revenue
+            </h2>
+            <p className="text-2xl font-black text-gray-900 tracking-tight mt-1">
+              ₹{totalRevenue.toLocaleString("en-IN")}
+            </p>
+          </div>
+
+          <div className="bg-white border border-gray-200/80 p-6 rounded-2xl shadow-sm flex flex-col items-center text-center">
+            <div className="p-3 bg-indigo-50 text-indigo-600 rounded-xl text-lg mb-3">
+              <FiUsers />
+            </div>
+            <h2 className="text-xs font-bold uppercase tracking-wider text-gray-400">
+              Total Customers
+            </h2>
+            <p className="text-2xl font-black text-gray-900 tracking-tight mt-1">
+              {totalCustomers}
+            </p>
+          </div>
+        </div>
+
+        {/* Order Status Breakdown Container */}
+        <div className="bg-white border border-gray-200/80 rounded-2xl p-5 sm:p-6 shadow-sm">
+          <h2 className="text-base font-bold text-gray-900 tracking-tight mb-4">
+            Order Status Breakdown
+          </h2>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 text-center">
+            <div
+              className={`border p-4 rounded-xl shadow-xs transition-all ${getStatusCardStyle("Pending")}`}
+            >
+              <p className="text-gray-400 text-xs font-semibold uppercase tracking-wider">
+                Pending
+              </p>
+              <p className="text-2xl font-black mt-1">{Pending}</p>
+            </div>
+            <div
+              className={`border p-4 rounded-xl shadow-xs transition-all ${getStatusCardStyle("Processing")}`}
+            >
+              <p className="text-gray-400 text-xs font-semibold uppercase tracking-wider">
+                Processing
+              </p>
+              <p className="text-2xl font-black mt-1">{Processing}</p>
+            </div>
+            <div
+              className={`border p-4 rounded-xl shadow-xs transition-all ${getStatusCardStyle("Shipped")}`}
+            >
+              <p className="text-gray-400 text-xs font-semibold uppercase tracking-wider">
+                Shipped
+              </p>
+              <p className="text-2xl font-black mt-1">{Shipped}</p>
+            </div>
+            <div
+              className={`border p-4 rounded-xl shadow-xs transition-all ${getStatusCardStyle("Delivered")}`}
+            >
+              <p className="text-gray-400 text-xs font-semibold uppercase tracking-wider">
+                Delivered
+              </p>
+              <p className="text-2xl font-black mt-1">{Delivered}</p>
+            </div>
+            <div
+              className={`border p-4 rounded-xl shadow-xs transition-all ${getStatusCardStyle("Cancelled")}`}
+            >
+              <p className="text-gray-400 text-xs font-semibold uppercase tracking-wider">
+                Cancelled
+              </p>
+              <p className="text-2xl font-black mt-1">{Cancelled}</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Recent Activity Feed Block */}
+        <div className="bg-white border border-gray-200/80 rounded-2xl p-5 sm:p-6 shadow-sm space-y-4">
+          <div className="flex items-center gap-2 pb-2 border-b border-gray-100">
+            <FiClock className="text-indigo-600" />
+            <h2 className="text-base font-bold text-gray-900 tracking-tight">
+              Recent Orders
+            </h2>
+          </div>
+
+          <div className="space-y-3">
+            {orders.slice(0, 5).map((order) => (
+              <div
+                key={order._id}
+                className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-slate-50 border border-slate-200/40 p-4 rounded-xl transition-all hover:bg-white hover:border-indigo-200 hover:shadow-md gap-2"
+              >
+                <div>
+                  <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
+                    Order Reference
+                  </p>
+                  <p className="text-sm font-mono font-semibold text-gray-700 truncate max-w-50 sm:max-w-xs">
+                    Order Id: {order._id}
+                  </p>
+                </div>
+                <div className="text-left sm:text-right font-medium">
+                  <p className="text-xs text-gray-400 flex items-center sm:justify-end gap-1 font-mono">
+                    <FiCalendar size={12} />{" "}
+                    {new Date(order.createdAt).toLocaleDateString("en-GB")}
+                  </p>
+                  <p className="text-sm font-extrabold text-indigo-600 mt-0.5">
+                    Revenue: ₹ {order.total.toLocaleString("en-IN")}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>

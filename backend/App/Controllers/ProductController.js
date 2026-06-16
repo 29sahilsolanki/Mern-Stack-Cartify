@@ -136,4 +136,40 @@ const updateProductDetails = async (req, res) => {
   }
 };
 
-module.exports = { uploadProducts, fetchProducts, updateProductDetails };
+// delete product
+const deleteProduct = async (req, res) => {
+  try {
+    const { productId } = req.params;
+    const product = await ProductsModel.findById(productId);
+    if (!product) {
+      return res
+        .status(404)
+        .json({ status: false, message: "Product not found..!!" });
+    }
+
+    if (product.publicId) {
+      await cloudinary.uploader.destroy(product.publicId);
+    }
+
+    const deleted = await ProductsModel.findByIdAndDelete(productId);
+
+    return res.status(200).json({
+      status: true,
+      message: "Product deleted successfully..!!",
+      deleted,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      status: false,
+      message: "Unable to delete product..!!",
+      error: error.message,
+    });
+  }
+};
+
+module.exports = {
+  uploadProducts,
+  fetchProducts,
+  updateProductDetails,
+  deleteProduct,
+};

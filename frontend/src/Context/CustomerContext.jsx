@@ -436,6 +436,10 @@ export const CustomerProvider = ({ children }) => {
     }
   };
 
+  //----------------------search section-----------------------//
+  const [search, setSearch] = useState("");
+  const [productsCopy, setProductsCopy] = useState([]);
+
   return (
     <CustomerContext.Provider
       value={{
@@ -450,6 +454,10 @@ export const CustomerProvider = ({ children }) => {
         address,
         buyProduct,
         order,
+        search,
+        productsCopy,
+        setProductsCopy,
+        setSearch,
         setBuyProduct,
         setAddress,
         setProfile,

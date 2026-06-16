@@ -1,12 +1,8 @@
 import { useCutomer } from "../Context/CustomerContext";
-import { IoIosArrowDown } from "react-icons/io";
-import { GiSettingsKnobs } from "react-icons/gi";
-import { FiSearch } from "react-icons/fi";
-import { useEffect } from "react";
-import { CiBookmarkPlus } from "react-icons/ci";
-import { FaBookmark } from "react-icons/fa";
-import { useState } from "react";
-import Fuse from "fuse.js";
+import { useEffect, useState } from "react";
+import { FiHeart, FiShoppingBag, FiShoppingCart } from "react-icons/fi";
+import { FaHeart } from "react-icons/fa";
+
 export default function Shop() {
   const {
     products,
@@ -18,262 +14,237 @@ export default function Shop() {
     addToCart,
     cart,
     manageBuyNow,
+    search,
+    setSearch,
+    productsCopy,
+    setProductsCopy,
   } = useCutomer();
 
   useEffect(() => {
     fetchProducts();
   }, []);
 
-  function handleClick(product) {
-    singleProductDetail(product);
-  }
-
-  function handleAddWishlist(productId) {
-    addToWishlist(productId);
-  }
-
-  function handleRemoveWishlist(productId) {
-    removeFromWishlist(productId);
-  }
-
-  function handleCart(productId) {
-    addToCart(productId);
-  }
-
-  function handleBuyNow(product) {
-    manageBuyNow(product);
-  }
-
-  //-----------------------duplicate products holder-----------------------//
-  const [productsCopy, setProductsCopy] = useState([]);
-  //-------------------filtering----------------------//
   const [category, setCategory] = useState("");
-
-  useEffect(() => {
-    if (category === "") {
-      setProductsCopy(products);
-    } else if (category === "electronics") {
-      setProductsCopy(products.filter((p) => p.category === "electronics"));
-    } else if (category === "furniture") {
-      setProductsCopy(products.filter((p) => p.category === "furniture"));
-    } else if (category === "jewellery") {
-      setProductsCopy(products.filter((p) => p.category === "jewellery"));
-    } else if (category === "fashion") {
-      setProductsCopy(products.filter((p) => p.category === "fashion"));
-    } else if (category === "beauty") {
-      setProductsCopy(products.filter((p) => p.category === "beauty"));
-    } else if (category === "sports") {
-      setProductsCopy(products.filter((p) => p.category === "sports"));
-    } else if (category === "home") {
-      setProductsCopy(products.filter((p) => p.category === "home"));
-    } else if (category === "toys") {
-      setProductsCopy(products.filter((p) => p.category === "toys"));
-    }
-  }, [category, products]);
-
-  //--------------------sorting-----------------------//
   const [sortValue, setSortValue] = useState("");
 
+  // Filter and Sort Logic combined
   useEffect(() => {
-    if (sortValue === "") {
-      setProductsCopy(products);
-    } else if (sortValue === "priceLowHigh") {
-      setProductsCopy([...products].sort((a, b) => a.price - b.price));
+    let result = [...products];
+
+    // Category Filter
+    if (category !== "") {
+      result = result.filter(
+        (p) => p.category?.toLowerCase() === category.toLowerCase(),
+      );
+    }
+
+    // Navbar Search Synchronizer
+    if (search.trim() !== "") {
+      const query = search.toLowerCase();
+      result = result.filter(
+        (p) =>
+          p.title?.toLowerCase().includes(query) ||
+          p.description?.toLowerCase().includes(query),
+      );
+    }
+
+    // Price Sorting
+    if (sortValue === "priceLowHigh") {
+      result.sort((a, b) => a.price - b.price);
     } else if (sortValue === "priceHighLow") {
-      setProductsCopy([...products].sort((a, b) => b.price - a.price));
+      result.sort((a, b) => b.price - a.price);
     }
-  }, [sortValue, products]);
 
-  //--------------------------searching---------------------------
-  const options = {
-    keys: ["title", "description"],
-    threshold: 0.4,
-  };
-  const fuse = new Fuse(products, options);
-  const [search, setSearch] = useState("");
-
-  function handleSearch(e) {
-    e.preventDefault();
-    if (!search) {
-      setProductsCopy(products);
-    }
-    const results = fuse.search(search);
-    setProductsCopy(results.map((p) => p.item));
-  }
-
-  useEffect(() => {
-    if (!search) {
-      setProductsCopy(products);
-    }
-  }, [search]);
+    setProductsCopy(result);
+  }, [category, sortValue, search, products]);
 
   return (
-    <div className="p-6">
-      {/* Toolbar */}
-      <div
-        className="w-full flex flex-col sm:flex-row sm:justify-between sm:items-center
-             bg-gradient-to-r from-gray-900/80 via-black/70 to-gray-900/80
-             backdrop-blur-md px-4 py-4 sm:px-6 rounded-2xl shadow-xl
-             mb-5 gap-4 border border-gray-700"
-      >
-        {/* Search Bar (mobile: first row, desktop: right side) */}
-        <form
-          onSubmit={handleSearch}
-          className="order-1 sm:order-2 flex items-center bg-gray-800/70 border border-gray-600 
-                 rounded-full px-3 py-2 w-full sm:w-1/2"
-        >
-          <input
-            type="text"
-            placeholder="Search products..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="flex-grow outline-none text-xs sm:text-sm bg-transparent text-white placeholder-gray-400"
-          />
-          <FiSearch
-            onClick={handleSearch}
-            className="text-lg sm:text-xl text-indigo-400 cursor-pointer ml-2"
-          />
-        </form>
-
-        {/* Sort + Filter Controls (mobile: second row, desktop: left side) */}
-        <div className="order-2 sm:order-1 flex flex-row gap-3 w-full sm:w-auto">
-          <select
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            className="w-1/2 sm:w-40 px-3 py-2 rounded-md bg-gray-900 font-bold text-white 
-               border-2 border-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 
-               text-xs sm:text-sm"
-          >
-            <option value="">All Category</option>
-            <option value="electronics">Electronics</option>
-            <option value="furniture">Furniture</option>
-            <option value="jewellery">Jewellery</option>
-            <option value="fashion">Fashion</option>
-            <option value="beauty">Beauty</option>
-            <option value="sports">Sports</option>
-            <option value="home">Home</option>
-            <option value="toys">Toys</option>
-          </select>
-
-          <select
-            value={sortValue}
-            onChange={(e) => setSortValue(e.target.value)}
-            className="w-1/2 sm:w-40 px-3 py-2 rounded-md bg-gray-900 font-bold text-white 
-               border-2 border-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 
-               text-xs sm:text-sm"
-          >
-            <option value="">Sort Products</option>
-            <option value="priceLowHigh">Price: Low → High</option>
-            <option value="priceHighLow">Price: High → Low</option>
-          </select>
-        </div>
-      </div>
-
-      {/* Product Flex Grid */}
-      <div className="flex flex-wrap justify-center gap-6">
-        {productsCopy && productsCopy.length > 0 ? (
-          productsCopy.map((p) => (
-            <div
-              key={p._id}
-              className="relative bg-gradient-to-b from-slate-800 via-gray-900 to-gray-800 text-white rounded-xl shadow-xl overflow-hidden w-60 hover:scale-102 transition duration-300 hover:shadow-pink-500/40"
-            >
-              {/* Wishlist Icon */}
-              <div className="absolute top-3 right-3 z-20 bg-black/40 rounded-full p-1">
-                {wishlist?.items?.some(
-                  (item) => item?.product?._id === p._id,
-                ) ? (
-                  <FaBookmark
-                    className="text-yellow-400 hover:text-red-500 transition-transform hover:scale-110 cursor-pointer"
-                    size={22}
-                    onClick={() => handleRemoveWishlist(p._id)}
-                  />
-                ) : (
-                  <CiBookmarkPlus
-                    className="text-gray-300 hover:text-green-500 transition-transform hover:scale-110 cursor-pointer"
-                    size={24}
-                    onClick={() => handleAddWishlist(p._id)}
-                  />
-                )}
-              </div>
-
-              {/* Product Image */}
-              <img
-                src={p.image}
-                alt={p.title}
-                className="w-full h-56 object-cover cursor-pointer"
-                onClick={() => handleClick(p)}
-              />
-
-              {/* Product Info */}
-              <div className="p-4 flex flex-col gap-2">
-                <h3 className="text-lg font-semibold truncate">{p.title}</h3>
-                <div className="flex justify-between text-sm text-gray-300">
-                  <span className="font-medium text-green-400">
-                    ₹ {p.price.toLocaleString("en-IN")}
-                  </span>
-                  <span className="font-medium">Stock: {p.stock}</span>
-                </div>
-              </div>
-
-              {/* Action Buttons */}
-              <div className="flex justify-between px-4 pb-4">
-                {p.stock <= 0 ? (
-                  <button
-                    type="button"
-                    className="bg-gray-500 text-white text-sm w-full py-2 rounded-full shadow-md cursor-not-allowed"
-                  >
-                    Out of stock
-                  </button>
-                ) : (
-                  <>
-                    <button
-                      type="button"
-                      className="bg-green-500 hover:bg-green-600 text-white text-sm w-24 py-2 rounded-full shadow-md transition"
-                      onClick={() => handleBuyNow(p)}
-                    >
-                      Buy Now
-                    </button>
-                    <button
-                      type="button"
-                      disabled={cart?.some(
-                        (item) => item.product._id === p._id,
-                      )}
-                      className={`${
-                        cart?.some((item) => item.product._id === p._id)
-                          ? "bg-gray-500 text-white text-sm w-24 py-2 rounded-full shadow-md cursor-not-allowed"
-                          : "bg-blue-500 hover:bg-blue-600 text-white text-sm w-24 py-2 rounded-full shadow-md transition"
-                      }`}
-                      onClick={() => handleCart(p._id)}
-                    >
-                      {cart?.some((item) => item.product._id === p._id)
-                        ? "Added"
-                        : "Add to Cart"}
-                    </button>
-                  </>
-                )}
-              </div>
-            </div>
-          ))
-        ) : (
-          <div className="text-center text-gray-400 py-10 bg-slate-800 rounded-md w-full">
-            <p className="text-lg font-semibold text-red-400">
-              No products found
+    <div className=" text-gray-900 min-h-screen p-4 sm:p-8 font-sans antialiased pt-10 mb-20">
+      <div className="max-w-7xl mx-auto">
+        {/* 1. CONTROLS TOOLBAR (Clean, Elegant & Integrated Layout) */}
+        <div className="w-full flex flex-col sm:flex-row sm:justify-between sm:items-center bg-white px-6 py-4 rounded-2xl border border-gray-200/80 mb-10 gap-4 shadow-sm">
+          <div>
+            <h1 className="text-lg font-bold text-gray-900 tracking-tight">
+              The Marketplace
+            </h1>
+            <p className="text-xs text-gray-400">
+              Showing {productsCopy?.length || 0} premium items
             </p>
-            <p className="text-sm">
-              Try changing your search keywords or filters.
-            </p>
-            <button
-              type="button"
-              onClick={() => {
-                setSearch("");
-                setProductsCopy(products);
-              }}
-              className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-md shadow-md transition mt-4"
-            >
-              Explore Products
-            </button>
           </div>
-        )}
+
+          {/* Filter Dropdowns */}
+          <div className="flex items-center gap-3 w-full sm:w-auto">
+            <select
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+              className="w-1/2 sm:w-44 px-4 py-2.5 rounded-xl bg-slate-50 text-xs sm:text-sm font-medium text-gray-700 border border-gray-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none transition-all cursor-pointer"
+            >
+              <option value="">All Categories</option>
+              <option value="electronics">Electronics</option>
+              <option value="furniture">Furniture</option>
+              <option value="jewellery">Jewellery</option>
+              <option value="fashion">Fashion</option>
+            </select>
+
+            <select
+              value={sortValue}
+              onChange={(e) => setSortValue(e.target.value)}
+              className="w-1/2 sm:w-44 px-4 py-2.5 rounded-xl bg-slate-50 text-xs sm:text-sm font-medium text-gray-700 border border-gray-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none transition-all cursor-pointer"
+            >
+              <option value="">Sort Products</option>
+              <option value="priceLowHigh">Price: Low → High</option>
+              <option value="priceHighLow">Price: High → Low</option>
+            </select>
+          </div>
+        </div>
+
+        {/* 2. PRODUCT CARDS GRID (Luxury Minimalist Cards) */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {productsCopy && productsCopy.length > 0 ? (
+            productsCopy.map((p) => {
+              const isItemInCart = cart?.some(
+                (item) => item.product._id === p._id,
+              );
+              const isItemInWishlist = wishlist?.items?.some(
+                (item) => item?.product?._id === p._id,
+              );
+
+              return (
+                <div
+                  key={p._id}
+                  className="group relative bg-white rounded-2xl border border-gray-200/60 overflow-hidden flex flex-col justify-between transition-all duration-300 hover:shadow-xl hover:border-indigo-200"
+                >
+                  {/* Wishlist Button (Minimal Glass Circle) */}
+                  <div className="absolute top-3 right-3 z-20 bg-white/90 backdrop-blur-md border border-gray-100 rounded-full p-2 shadow-sm hover:scale-105 transition-transform">
+                    {isItemInWishlist ? (
+                      <FaHeart
+                        className="text-red-500 cursor-pointer active:scale-90 transition-transform"
+                        size={15}
+                        onClick={() => removeFromWishlist(p._id)}
+                      />
+                    ) : (
+                      <FiHeart
+                        className="text-gray-400 hover:text-red-500 cursor-pointer active:scale-90 transition-transform"
+                        size={15}
+                        onClick={() => addToWishlist(p._id)}
+                      />
+                    )}
+                  </div>
+
+                  {/* Product Image Container (Seamless Light Blend) */}
+                  <div className="w-full h-64 bg-white relative overflow-hidden flex items-center justify-center p-4 group-hover:scale-102 transition-transform duration-300">
+                    <img
+                      src={p.image}
+                      alt={p.title}
+                      loading="lazy"
+                      className="max-h-full max-w-full object-contain mix-blend-multiply transition-transform duration-500"
+                      onClick={() => singleProductDetail(p)}
+                    />
+                    {p.stock <= 0 && (
+                      <div className="absolute inset-0 bg-white/80 backdrop-blur-xs flex items-center justify-center">
+                        <span className="text-[10px] uppercase tracking-widest text-red-600 font-bold bg-red-50 border border-red-200 px-3 py-1.5 rounded-lg shadow-sm">
+                          Out Of Stock
+                        </span>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Product Info Panel (Saaf Elegant Typography) */}
+                  <div className="p-4 grow flex flex-col justify-between bg-white border-t border-gray-100">
+                    <div className="space-y-1">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-indigo-600 block">
+                        {p.category || "General"}
+                      </span>
+                      <h3
+                        onClick={() => singleProductDetail(p)}
+                        className="text-sm font-semibold text-gray-800 tracking-tight line-clamp-2 cursor-pointer hover:text-indigo-600 transition-colors"
+                      >
+                        {p.title}
+                      </h3>
+                    </div>
+
+                    <div className="flex justify-between items-center pt-3 mt-2">
+                      <span className="text-base font-bold text-gray-900">
+                        ₹{p.price.toLocaleString("en-IN")}
+                      </span>
+                      <span
+                        className={`text-[11px] font-medium px-2 py-0.5 rounded-md ${
+                          p.stock > 5
+                            ? "text-gray-400 bg-gray-50"
+                            : "text-amber-700 bg-amber-50"
+                        }`}
+                      >
+                        {p.stock > 0 ? `${p.stock} left` : "Sold Out"}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Operational Action Panel (Sleek Buttons) */}
+                  <div className="px-4 pb-4 bg-white flex gap-2">
+                    {p.stock <= 0 ? (
+                      <button
+                        type="button"
+                        disabled
+                        className="w-full bg-gray-100 text-gray-400 text-xs font-bold uppercase tracking-wider py-3 rounded-xl cursor-not-allowed border border-gray-200 text-center"
+                      >
+                        Unavailable
+                      </button>
+                    ) : (
+                      <>
+                        <button
+                          type="button"
+                          className="w-1/2 bg-indigo-600 text-white hover:bg-indigo-700 text-xs font-bold uppercase tracking-wider py-3 rounded-xl transition-all active:scale-95 text-center shadow-sm shadow-indigo-600/10 flex items-center justify-center gap-1.5"
+                          onClick={() => manageBuyNow(p)}
+                        >
+                          <FiShoppingBag /> Buy
+                        </button>
+
+                        <button
+                          type="button"
+                          disabled={isItemInCart}
+                          className={`w-1/2 text-xs font-bold uppercase tracking-wider py-3 rounded-xl transition-all border text-center flex items-center justify-center gap-1.5 ${
+                            isItemInCart
+                              ? "bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed"
+                              : "bg-white text-indigo-600 border-indigo-200 hover:border-indigo-600 hover:bg-indigo-50 active:scale-95"
+                          }`}
+                          onClick={() => addToCart(p._id)}
+                        >
+                          <FiShoppingCart /> {isItemInCart ? "Added" : "Cart"}
+                        </button>
+                      </>
+                    )}
+                  </div>
+                </div>
+              );
+            })
+          ) : (
+            /* 3. ZERO RESULTS FALLBACK BLOCK */
+            <div className="text-center py-20 px-4 bg-white border border-gray-200 rounded-2xl w-full col-span-full flex flex-col items-center justify-center shadow-sm">
+              <span className="text-xs font-bold uppercase tracking-widest text-indigo-600 block mb-2">
+                No Products Found
+              </span>
+              <h3 className="text-xl font-bold text-gray-900 tracking-tight">
+                No Parameters Matched Your Request
+              </h3>
+              <p className="text-sm text-gray-400 max-w-sm mt-2 leading-relaxed">
+                We couldn't find anything matching your filters or search terms.
+                Try resetting filters.
+              </p>
+              <button
+                type="button"
+                onClick={() => {
+                  setSearch("");
+                  setCategory("");
+                  setSortValue("");
+                  setProductsCopy(products);
+                }}
+                className="cursor-pointer bg-indigo-600 text-white font-bold text-xs uppercase tracking-wider px-6 py-3 rounded-xl shadow-md hover:bg-indigo-700 transition-colors mt-6"
+              >
+                Reset All Filters
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

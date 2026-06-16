@@ -1,11 +1,16 @@
-import { FaUserEdit } from "react-icons/fa";
-import { MdAddIcCall } from "react-icons/md";
-import { IoIosMail } from "react-icons/io";
-import { FaUser } from "react-icons/fa";
-import { FaMapPin } from "react-icons/fa6";
 import { useState } from "react";
-import EditProfile from "./EditProfile";
 import { useAdmin } from "../../../Context/AdminContext";
+import EditProfile from "./EditProfile";
+import {
+  FiUser,
+  FiMail,
+  FiPhone,
+  FiCalendar,
+  FiUserCheck,
+  FiEdit,
+  FiHelpCircle,
+  FiSend,
+} from "react-icons/fi";
 
 export default function Settings() {
   const [edit, setEdit] = useState(false);
@@ -18,145 +23,176 @@ export default function Settings() {
     adminTicketReply(supportId, userId, adminReply);
   }
 
+  const getTicketStatusStyle = (status) => {
+    switch (status) {
+      case "Open":
+        return "bg-emerald-50 text-emerald-700 border-emerald-200";
+      case "Processing":
+        return "bg-amber-50 text-amber-700 border-amber-200";
+      default:
+        return "bg-red-50 text-red-700 border-red-200";
+    }
+  };
+
   return (
-    <div className="min-h-screen text-white p-4 sm:p-8">
-      <div className="max-w-5xl mx-auto space-y-8">
+    <div className=" text-gray-900 min-h-screen p-4 pt-24 pb-12 sm:p-8 font-sans antialiased flex flex-col items-center w-full">
+      <div className="max-w-5xl w-full mx-auto space-y-8">
+        {/* 1. Admin Profile Card Section */}
         {edit ? (
           <EditProfile edit={edit} setEdit={setEdit} />
         ) : (
-          <div className="bg-gradient-to-b from-slate-800 via-gray-900 to-gray-800 p-6 rounded-lg shadow-lg flex flex-col sm:flex-row items-center justify-between gap-6 sm:gap-10">
-            {/* Profile Picture */}
+          <div className="bg-white border border-gray-200/80 p-6 rounded-2xl shadow-sm flex flex-col sm:flex-row items-center justify-between gap-6 sm:gap-10">
+            {/* Profile Picture with Ring Accent */}
             <img
               src={admin.profilePic}
               alt={admin.name}
-              className="w-32 h-32 sm:w-40 sm:h-40 rounded-full object-cover border-4 border-indigo-600"
+              className="w-32 h-32 sm:w-36 sm:h-36 rounded-full object-cover border-4 border-white shadow-md ring-4 ring-indigo-50 shrink-0"
             />
 
-            {/* Admin Info */}
+            {/* Admin Info Metadata */}
             <div className="space-y-3 flex-1 text-center sm:text-left">
-              <h1 className="text-xl sm:text-2xl font-bold capitalize">
-                {admin.name}
-              </h1>
-
-              <div className="flex items-center justify-center sm:justify-start gap-2 text-gray-300 text-sm sm:text-base">
-                <IoIosMail className="text-indigo-400" />
-                <span>{admin.email}</span>
+              <div>
+                <span className="text-[10px] font-bold uppercase tracking-widest text-indigo-600 block mb-0.5">
+                  Master Console Operations
+                </span>
+                <h1 className="text-xl sm:text-2xl font-black text-gray-900 tracking-tight capitalize">
+                  {admin.name}
+                </h1>
               </div>
 
-              <div className="flex items-center justify-center sm:justify-start gap-2 text-gray-300 text-sm sm:text-base">
-                <MdAddIcCall className="text-green-400" />
-                <span>{admin.phone}</span>
+              <div className="space-y-1.5 text-sm text-gray-600 font-medium">
+                <div className="flex items-center justify-center sm:justify-start gap-2">
+                  <FiMail className="text-indigo-500" size={14} />
+                  <span className="font-mono text-xs">{admin.email}</span>
+                </div>
+
+                <div className="flex items-center justify-center sm:justify-start gap-2">
+                  <FiPhone className="text-gray-400" size={14} />
+                  <span className="font-mono text-xs">{admin.phone}</span>
+                </div>
+
+                <div className="flex items-center justify-center sm:justify-start gap-2 pt-1">
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider bg-indigo-50 text-indigo-700 border border-indigo-100">
+                    <FiUserCheck size={11} /> {admin.role}
+                  </span>
+                </div>
               </div>
 
-              <div className="flex items-center justify-center sm:justify-start gap-2 text-indigo-400 font-semibold text-sm sm:text-base">
-                <FaUser />
-                <span>{admin.role}</span>
-              </div>
-
-              <div className="flex items-center justify-center sm:justify-start gap-2 text-gray-400 text-xs sm:text-sm">
-                <FaMapPin className="text-red-400" />
-                <span>{new Date(admin.createdAt).toLocaleString("en-GB")}</span>
+              <div className="flex items-center justify-center sm:justify-start gap-1.5 text-xs text-gray-400 border-t border-dashed border-gray-200 pt-2.5 mt-2 font-mono">
+                <FiCalendar size={13} />
+                <span>
+                  Joined Platform:{" "}
+                  {new Date(admin.createdAt).toLocaleString("en-GB")}
+                </span>
               </div>
             </div>
 
-            {/* Edit Profile Button */}
-            <div>
+            {/* Edit Profile Action Trigger */}
+            <div className="w-full sm:w-auto">
               <button
                 type="button"
-                className="flex cursor-pointer items-center gap-2 px-4 sm:px-5 py-2 bg-indigo-600 text-white font-semibold rounded-md shadow-md hover:bg-indigo-700 transition text-sm sm:text-base"
+                className="w-full sm:w-auto flex cursor-pointer items-center justify-center gap-2 px-5 py-3 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold uppercase tracking-wider rounded-xl shadow-md shadow-indigo-600/10 transition-all active:scale-98"
                 onClick={() => setEdit(true)}
               >
-                <FaUserEdit />
-                <span>Edit Profile</span>
+                <FiEdit size={13} />
+                <span>Modify Profile</span>
               </button>
             </div>
           </div>
         )}
       </div>
 
-      {/* Support Section */}
-      <div className="mt-10 sm:mt-12">
-        <div className="bg-gradient-to-b from-slate-800 via-gray-900 to-black rounded-xl shadow-lg p-6 sm:p-8 border border-slate-700">
-          <h1 className="text-2xl sm:text-3xl font-bold text-white mb-6 text-center">
-            Support Tickets
-          </h1>
+      {/* 2. Support Ticket Section */}
+      <div className="mt-8 max-w-5xl w-full">
+        <div className="bg-white border border-gray-200/80 rounded-2xl p-5 sm:p-8 shadow-sm space-y-6">
+          <div className="flex items-center justify-center sm:justify-start gap-2 pb-4 border-b border-gray-100">
+            <FiHelpCircle className="text-indigo-600" />
+            <h2 className="text-base font-bold text-gray-900 tracking-tight">
+              Support Tickets Control
+            </h2>
+          </div>
 
-          {/* Date Filter */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
-            <label className="text-gray-300 font-medium text-sm sm:text-base">
-              Select Date:
+          {/* Date Filter Panel */}
+          <div className="w-full bg-slate-50 border border-gray-200/60 p-4 rounded-xl flex flex-col sm:flex-row items-center justify-center gap-3.5">
+            <label className="text-gray-500 font-bold text-xs uppercase tracking-wider">
+              Filter By Query Date:
             </label>
             <input
               type="date"
               value={ticketDate}
               onChange={(e) => setTicketDate(e.target.value)}
-              className="px-3 sm:px-4 py-2 rounded-md bg-slate-800 text-white border border-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full sm:w-auto"
+              className="px-4 py-2 rounded-xl bg-white border border-gray-200 text-sm font-bold text-gray-700 outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all cursor-pointer w-full sm:w-auto"
             />
           </div>
 
-          {/* Tickets List */}
+          {/* Tickets List Iterator */}
           {ticketInfo && ticketInfo.length > 0 ? (
-            <div className="space-y-6 sm:space-y-8">
+            <div className="grid grid-cols-1 gap-6">
               {ticketInfo.map((p) => (
                 <div
                   key={p._id}
-                  className="bg-slate-900 rounded-lg shadow-md p-4 sm:p-6 border border-slate-700 hover:border-indigo-500 transition-all"
+                  className="bg-white border border-gray-200 rounded-2xl p-4 sm:p-5 flex flex-col justify-between shadow-xs hover:shadow-md transition-all duration-200"
                 >
-                  {/* User Info */}
-                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-slate-700 pb-4 mb-4 gap-2">
+                  {/* User Account Info Header */}
+                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-slate-100 pb-3.5 mb-4 gap-3">
                     <div>
-                      <h2 className="text-lg sm:text-xl font-bold text-white">
+                      <h2 className="text-sm font-bold text-gray-900 tracking-tight flex items-center gap-1.5">
+                        <FiUser className="text-gray-400" size={14} />{" "}
                         {p.user.name}
                       </h2>
-                      <p className="text-gray-400 text-xs sm:text-sm">
-                        {p.user.email}
-                      </p>
-                      <p className="text-gray-400 text-xs sm:text-sm">
-                        {p.user.phone}
+                      <p className="text-xs text-gray-400 font-mono mt-0.5">
+                        {p.user.email} • {p.user.phone}
                       </p>
                     </div>
-                    <span className="px-3 sm:px-4 py-1 bg-indigo-600 text-white rounded-full text-xs sm:text-sm font-semibold">
-                      Customer
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-slate-100 text-gray-600 border border-gray-200">
+                      Customer Node
                     </span>
                   </div>
 
-                  {/* Communication Threads */}
-                  <div className="space-y-4 sm:space-y-6">
-                    <div className="bg-slate-700 rounded-lg p-4 sm:p-5 shadow-md hover:shadow-xl transition flex flex-col gap-3">
-                      {/* Status + Date */}
-                      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+                  {/* Communication Thread Content */}
+                  <div className="space-y-4">
+                    <div className="bg-slate-50/70 border border-slate-200/40 rounded-xl p-4 sm:p-5 space-y-3.5">
+                      {/* Thread Header Meta */}
+                      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-slate-200/40 pb-2">
                         <span
-                          className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                            p.status === "Open"
-                              ? "bg-green-600 text-white"
-                              : p.status === "Processing"
-                                ? "bg-yellow-500 text-black"
-                                : "bg-red-600 text-white"
-                          }`}
+                          className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border ${getTicketStatusStyle(p.status)}`}
                         >
                           {p.status}
                         </span>
-                        <span className="text-gray-400 text-xs">
+                        <span className="text-gray-400 text-xs font-mono flex items-center gap-1">
+                          <FiCalendar size={12} />{" "}
                           {new Date(p.createdAt).toLocaleString("en-GB")}
                         </span>
                       </div>
 
-                      {/* Messages */}
-                      <p className="text-gray-200 text-xs sm:text-sm leading-relaxed">
-                        Message: {p.message}
-                      </p>
-                      <p className="text-gray-200 text-xs sm:text-sm leading-relaxed">
-                        Admin: {p.reply}
-                      </p>
+                      {/* Message History Fields */}
+                      <div className="text-xs space-y-2 text-gray-700 leading-relaxed font-medium">
+                        <p className="bg-white p-3 rounded-lg border border-slate-100">
+                          <span className="font-bold text-gray-400 uppercase tracking-wider text-[10px] block mb-1">
+                            User Query Message
+                          </span>
+                          {p.message}
+                        </p>
+                        <p className="bg-indigo-50/30 p-3 rounded-lg border border-indigo-100/50 text-indigo-950">
+                          <span className="font-bold text-indigo-700 uppercase tracking-wider text-[10px] block mb-1">
+                            Admin Response Node
+                          </span>
+                          {p.reply || (
+                            <span className="text-gray-400 font-light italic">
+                              No reply dispatched yet...
+                            </span>
+                          )}
+                        </p>
+                      </div>
 
-                      {/* Reply Box */}
+                      {/* Interactive Reply Input Dispatcher Box */}
                       {p.status !== "Closed" && (
-                        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+                        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 pt-2">
                           <input
                             type="text"
-                            placeholder="Enter your reply..."
+                            placeholder="Enter your operational reply narrative..."
                             value={adminReply.reply}
-                            className="flex-1 px-3 py-2 rounded-md bg-gray-800 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-xs sm:text-sm"
+                            className="flex-1 px-4 py-2.5 rounded-xl bg-white text-sm font-medium text-gray-800 border border-gray-200 outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all placeholder-gray-400"
                             onChange={(e) =>
                               setAdminReply({
                                 ...adminReply,
@@ -165,10 +201,11 @@ export default function Settings() {
                             }
                           />
                           <button
+                            type="button"
                             onClick={() => handleReply(p._id, p?.user?._id)}
-                            className="px-6 sm:px-8 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition text-xs sm:text-sm font-semibold"
+                            className="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold uppercase tracking-wider rounded-xl shadow-md shadow-indigo-600/10 transition-all active:scale-95 flex items-center justify-center gap-1.5 cursor-pointer"
                           >
-                            Send
+                            <FiSend size={12} /> Dispatched
                           </button>
                         </div>
                       )}
@@ -178,9 +215,12 @@ export default function Settings() {
               ))}
             </div>
           ) : (
-            <p className="text-center text-gray-400 text-sm sm:text-base">
-              No support ticket found..!!
-            </p>
+            <div className="text-center py-12 bg-slate-50 border border-dashed border-gray-200 rounded-xl">
+              <p className="text-gray-400 text-sm font-medium">
+                No verified support ticket logs index registered under this
+                timeframe.
+              </p>
+            </div>
           )}
         </div>
       </div>

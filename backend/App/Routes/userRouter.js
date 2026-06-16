@@ -20,6 +20,7 @@ const {
   uploadProducts,
   fetchProducts,
   updateProductDetails,
+  deleteProduct,
 } = require("../Controllers/ProductController");
 const userRouter = express.Router();
 const { upload } = require("../Middlewares/Multer");
@@ -193,6 +194,14 @@ userRouter.delete(
   authUser,
   verifyAdmin,
   deleteUserAndDetails,
+);
+
+//--------------------delete product-----------------//
+userRouter.delete(
+  "/delete-product/:productId",
+  authUser,
+  verifyAdmin,
+  deleteProduct,
 );
 
 module.exports = { userRouter };

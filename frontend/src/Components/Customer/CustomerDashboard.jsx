@@ -8,14 +8,14 @@ export default function CustomerDashboard() {
   const { menu } = useCutomer();
 
   return (
-    <div className="bg-slate-600">
+    <div className="bg-slate-100">
       <div>
         <CusNavbar />
       </div>
       <div>
         {menu ? <Sidebar /> : ""}
         <div
-          className={`flex-1 ${menu ? "ml-64" : ""} pt-20 p-6 min-h-screen bg-slate-600`}
+          className={`flex-1 ${menu ? "md:ml-64" : ""} p-4 mt-30 md:mt-10 transition-all duration-300`}
         >
           <Outlet />
         </div>

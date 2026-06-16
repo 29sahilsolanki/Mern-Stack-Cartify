@@ -193,7 +193,8 @@ export const AdminProvider = ({ children }) => {
     const formData = new FormData();
     formData.append("profile", profilePic);
 
-    const url = "https://cartify-vq4o.onrender.com/cartify/update-admin-profile";
+    const url =
+      "https://cartify-vq4o.onrender.com/cartify/update-admin-profile";
     try {
       const res = await axios.put(url, formData, {
         headers: { Authorization: token },
@@ -229,7 +230,8 @@ export const AdminProvider = ({ children }) => {
     }
   }, [admin]);
   const updateAdminInfo = async () => {
-    const url = "https://cartify-vq4o.onrender.com/cartify/update-admin-details";
+    const url =
+      "https://cartify-vq4o.onrender.com/cartify/update-admin-details";
     try {
       const res = await axios.put(url, adminDetails, {
         headers: { Authorization: token },
@@ -261,7 +263,8 @@ export const AdminProvider = ({ children }) => {
   }, [itemId]);
 
   const updateProductDetails = async (formData) => {
-    const url = "https://cartify-vq4o.onrender.com/cartify/update-product-details";
+    const url =
+      "https://cartify-vq4o.onrender.com/cartify/update-product-details";
     try {
       const res = await axios.put(url, formData, {
         headers: { Authorization: token },
@@ -346,6 +349,19 @@ export const AdminProvider = ({ children }) => {
     }
   };
 
+  //-------------------delete product-----------------------//
+  const deleteProduct = async (productId) => {
+    const url = `https://cartify-vq4o.onrender.com/cartify/delete-product/${productId}`;
+    try {
+      const res = await axios.delete(url);
+      toast.success(res?.data?.message);
+      fetchAllOrder();
+    } catch (error) {
+      toast.error(error?.response?.data?.message);
+      console.log(error?.response?.data);
+    }
+  };
+
   return (
     <AdminContext.Provider
       value={{
@@ -384,6 +400,7 @@ export const AdminProvider = ({ children }) => {
         fetchAllOrder,
         adminTicketReply,
         deleteUserAndDetails,
+        deleteProduct,
       }}
     >
       {children}

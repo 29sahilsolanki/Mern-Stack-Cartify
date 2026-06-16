@@ -7,12 +7,12 @@ import Footer from "../Footer/Footer";
 export default function AdminDashboard() {
   const { menu } = useAdmin();
   return (
-    <div className="bg-slate-600">
+    <div className="bg-slate-100">
       <div>
         <Navbar />
       </div>
       <div
-        className={`flex-1 ${menu ? "ml-64" : ""} pt-20 p-6 min-h-screen bg-slate-600`}
+        className={`flex-1 ${menu ? "ml-64" : ""} md:mt-16 p-6 min-h-screen`}
       >
         {menu ? <AdminSidebar /> : ""}
         <Outlet />
