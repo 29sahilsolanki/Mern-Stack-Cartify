@@ -56,7 +56,7 @@ export default function Shop() {
     }
 
     setProductsCopy(result);
-  }, [category, sortValue, search, products]);
+  }, [category, sortValue, products, search]);
 
   return (
     <div className=" text-gray-900 min-h-screen p-4 sm:p-8 font-sans antialiased pt-10 mb-20">

@@ -3,41 +3,32 @@ import { FaRegUser, FaRegHeart } from "react-icons/fa";
 import { BsCartCheck } from "react-icons/bs";
 import { useCutomer } from "../../Context/CustomerContext";
 import { useLogin } from "../../Context/LoginContext";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { FaSearch } from "react-icons/fa";
 import Fuse from "fuse.js";
-import { useEffect } from "react";
 
 export default function CusNavbar() {
+  const navigate = useNavigate();
   const { menu, setMenu, search, setSearch, setProductsCopy, products } =
     useCutomer();
   const { token } = useLogin();
 
   //------------------- Fuzzy Searching Configuration -----------------------//
-  const options = {
-    keys: ["title", "description"],
-    threshold: 0.4,
-  };
-  const fuse = new Fuse(products, options);
-
   function handleSearch(e) {
-    if (e) e.preventDefault();
+    e.preventDefault();
     if (!search.trim()) {
       setProductsCopy(products);
       return;
     }
+    const options = {
+      keys: ["title", "description"],
+      threshold: 0.4,
+    };
+    const fuse = new Fuse(products, options);
     const results = fuse.search(search);
     setProductsCopy(results.map((p) => p.item));
+    navigate("/shop");
   }
-
-  // ऑटो-रीसेट लॉजिक
-  useEffect(() => {
-    if (!search.trim()) {
-      setProductsCopy(products);
-    } else {
-      handleSearch();
-    }
-  }, [search, products]);
 
   const navLinkClasses = ({ isActive }) =>
     `relative flex flex-col items-center gap-1 transition-all duration-300 text-xs font-medium ${
@@ -46,9 +37,7 @@ export default function CusNavbar() {
 
   return (
     <header className="fixed top-0 left-0 w-full z-50 bg-white/95 backdrop-blur-md border-b border-gray-200 shadow-sm transition-all duration-300">
-      {/* मुख्य नेविगेशन बार */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
-        {/* Left Section */}
         <div className="flex items-center gap-3 sm:gap-4 shrink-0">
           {token && (
             <button
